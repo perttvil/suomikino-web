@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/publishReplay';
 import { Observable } from 'rxjs/Observable';
 import { parseString } from 'xml2js';
@@ -37,7 +38,8 @@ export class ScheduleService {
         responseType: 'text'
       })
       .switchMap(data => this.parseXml(data))
-      .map(data => sortBy(data, [(d) => d.originalTitle]))
+      .map(data => data.filter(d => moment(d.showStart).isAfter(moment())))
+      .map(data => sortBy(data, (d) => d.originalTitle))
       .publishReplay(1)
       .refCount();
   }

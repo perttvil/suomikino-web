@@ -1,0 +1,75 @@
+<form>
+  <mat-form-field *ngIf="areas">
+    <mat-select placeholder="Paikkakunta" [(ngModel)]="selectedArea" name="selectedArea" (change)="areaChanged()">
+      <mat-option *ngFor="let a of areas" [value]="a">
+        {{a.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field *ngIf="selectedArea">
+    <mat-select placeholder="Päivämäärä" [(ngModel)]="selectedDate" name="selectedDate" (change)="dateChanged()">
+      <mat-option *ngFor="let d of dates" [value]="d.format('DD.MM.YYYY')">
+        {{d.format('DD.MM.YYYY')}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</form>
+
+<div class="example-container mat-elevation-z8" *ngIf="dataSource.data">
+  <mat-table #table [dataSource]="dataSource" 
+    matSort matSortActive="originalTitle" matSortDisableClear matSortDirection="asc">
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="originalTitle">
+      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Nimi</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{element.originalTitle}}
+        <small>({{element.year}})</small>
+        <ng-container *ngIf="element.title != element.originalTitle">
+          <br/><small>{{element.title}}</small>
+        </ng-container>
+        <br/><small>{{element.presentationMethodAndLanguage}} {{element.genre}}</small>
+        <br/><small>{{element.theatreAuditorium}}</small>
+      </mat-cell>
+    </ng-container>
+
+    <!-- releaseDate Column -->
+    <ng-container matColumnDef="releaseDate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Julkaisu pvm</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.releaseDate.format('DD.MM.YYYY')}} </mat-cell>
+    </ng-container>
+
+    <!-- showStart Column -->
+    <ng-container matColumnDef="showStart">
+      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Näytös</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{element.showStart.format('HH:mm')}} - {{element.showEnd.format('HH:mm')}}
+        <br/>
+        <small>{{element.lenghtMin}} min.</small>
+      </mat-cell>
+    </ng-container>
+
+    <!-- imdb Column -->
+    <ng-container matColumnDef="imdb">
+      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">IMDB</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <ng-container *ngIf="element.omdbData?.imdbRating">
+          {{element.omdbData.imdbRating}}/10, {{element.omdbData.imdbVotes}} votes
+        </ng-container>
+      </mat-cell>
+    </ng-container>
+
+    <!-- metacritic Column -->
+    <ng-container matColumnDef="metascore">
+      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Metascore</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <ng-container *ngIf="element.omdbData?.Metascore">
+          {{element.omdbData.Metascore}}%
+        </ng-container>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+</div>

@@ -18,12 +18,9 @@ function copy {
 function push {
     echo "Push start"
     pushd $websiteDir
-    git stash
-    git checkout gh-pages
     git add .
     git commit -am "Next version"
     git push origin gh-pages
-    git stash pop
     popd
     echo "Push end"
 }

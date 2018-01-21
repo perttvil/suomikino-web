@@ -4,7 +4,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/publishReplay';
 import { Observable } from 'rxjs/Observable';
 import { parseString } from 'xml2js';
-import { first } from 'lodash';
+import { first, sortBy } from 'lodash';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { Area } from '../finnkino/area.service';
@@ -37,6 +37,7 @@ export class ScheduleService {
         responseType: 'text'
       })
       .switchMap(data => this.parseXml(data))
+      .map(data => sortBy(data, [(d) => d.originalTitle]))
       .publishReplay(1)
       .refCount();
   }
@@ -71,7 +72,7 @@ export class ScheduleService {
           theatre: first(json.Theatre),
           theatreAuditorium: first(json.TheatreAndAuditorium),
           presentationMethodAndLanguage: first(json.PresentationMethodAndLanguage)
-    });
+        });
   }
 }
 export interface Show {

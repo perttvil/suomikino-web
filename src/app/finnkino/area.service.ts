@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { parseString } from 'xml2js';
 import { first } from 'lodash';
@@ -18,7 +19,8 @@ export class AreaService {
         headers: httpHeaders,
         responseType: 'text'
       })
-      .switchMap( areas => this.parseAreas(areas));
+      .switchMap( areas => this.parseAreas(areas))
+      .map( areas => areas.slice(1) );
   }
 
   private parseAreas(areas: string): Observable<Area[]> {

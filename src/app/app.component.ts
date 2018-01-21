@@ -123,7 +123,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnChanges {
     this.ngZone.run( () => {
       this.omdbData = omdbData;
       shows.forEach(s => {
-        s.omdbData = omdbData.find(d => s.originalTitle === d.Title);
+        s.omdbData = omdbData.find(d => this.ratingService.convertShowNameToOmdb(s.originalTitle) === d.Title);
       });
     });
   }
